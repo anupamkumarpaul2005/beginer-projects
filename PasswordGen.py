@@ -17,7 +17,7 @@ def gen():
     print("Enter length of password: ")
     l = int(input())
     pswrd = "".join(random.sample(data, l))
-    print("Your pssword can be: "+pswrd)
+    print("Your password can be: "+pswrd)
 
 
 def settings():
