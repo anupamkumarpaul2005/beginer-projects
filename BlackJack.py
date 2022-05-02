@@ -32,7 +32,7 @@ def compare(player, dealer):
 
 
 def bet():
-    print("Enter the anount of bet:")
+    print("Enter the amount of bet:")
     while True:
         b = int(input())
         if b <= wallet:
@@ -68,12 +68,25 @@ def hit_or_stand():
             pl.append(p)
             if points(pl) > 21:
                 return "Bust"
-            pldeck = ", ".join(pl)
-            print(f"You:     {pldeck}")
+            print(f'You:     {", ".join(pl)}')
             return hit_or_stand()
         elif user == 's':
             return
         print("Not a valid request.")
+
+
+def dealer_hits(l):
+    if points(l) < 17:
+        while True:
+            p = random.choice(deck)
+            if p not in dl:
+                break
+        dl.append(p)
+        if points(dl) > 21:
+            return "Bust"
+        if points(l) < 17:
+            dealer_hits(dl)
+        return
 
 
 deck = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K']
@@ -89,14 +102,19 @@ while True:
         pl = random.sample(deck, k=2)
         print(f"Dealer:  ?, {dl[1]}")
         print(f"You:     {pl[0]}, {pl[1]}")
-        h = hit_or_stand()
+        pl_hit = hit_or_stand()
+        dl_hit = dealer_hits(dl)
         d_deck = ", ".join(dl)
-        p_deck = ", ".join((pl))
+        p_deck = ", ".join(pl)
         print(f"Dealer:  {d_deck}")
         print(f"You:     {p_deck}")
-        if h == "Bust":
+        if pl_hit == "Bust":
             wallet -= bet_amount
             print(f"Bust!\nYou lose ${bet_amount}.\nWallet: {wallet}")
+            continue
+        if dl_hit == "Bust":
+            wallet += bet_amount
+            print(f"Bust!\nYou win ${bet_amount}.\nWallet: {wallet}")
             continue
         res = compare(points(pl), points(dl))
         if res == 0:
